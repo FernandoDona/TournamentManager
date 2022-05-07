@@ -1,0 +1,24 @@
+Competidor:
+    Nome
+
+Jogo:
+    Competidores
+    Ganhador
+    Perdedor
+
+Rodada:
+    Competidores
+    Numero
+    Jogos
+    Ganhadores
+
+Fase:
+    Competidores
+    Tipo
+    Rodadas
+
+
+Campeonato:
+    Competidores
+    Campeao
+    Fases
