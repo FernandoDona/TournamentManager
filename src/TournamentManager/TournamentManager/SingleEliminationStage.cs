@@ -10,10 +10,9 @@ public class SingleEliminationStage : IStage
     public List<Competitor> Competitors { get; } = new List<Competitor>();
 
 
-    public void CreateMatches(List<Competitor> listOfCompetitors, bool isOrderedBySeed)
+    public List<Match> CreateMatches(List<Competitor> listOfCompetitors, bool isOrderedBySeed)
     {
-        var round = new Round();
-
+        var listOfMatches = new List<Match>();
         var numberOfMatches = listOfCompetitors.Count / 2;
 
         if (isOrderedBySeed)
@@ -23,13 +22,17 @@ public class SingleEliminationStage : IStage
             var lowerSeedPosition = listOfCompetitors.Count - 1;
             for (int i = 1; i <= numberOfMatches; i++)
             {
-
-                var match = new Match { MatchNumber = 1, RoundNumber = round.Number };
+                var match = new Match();
                 match.AddCompetitor(orderedListOfCompetitors.ElementAt(higherSeedPosition));
                 match.AddCompetitor(orderedListOfCompetitors.ElementAt(lowerSeedPosition));
-            }
 
+                listOfMatches.Add(match);
+
+                higherSeedPosition++;
+                lowerSeedPosition--;
+            }
         }
 
+        return listOfMatches;
     }
 }
