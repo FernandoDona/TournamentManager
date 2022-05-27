@@ -22,6 +22,12 @@ public class Match
         competitors = new List<Competitor>();
     }
 
+    public Match(IEnumerable<Competitor> listOfCompetitors)
+    {
+        competitors = new List<Competitor>();
+        AddCompetitor(listOfCompetitors);
+    }
+
     public void SetWinner(Competitor winner)
     {
         if (competitors.Count == 0)
@@ -47,7 +53,16 @@ public class Match
         competitors.Add(competitor);
     }
 
+    public void AddCompetitor(IEnumerable<Competitor> listOfCompetitors)
+    {
+        if (!IsAvailableToAddCompetitor(listOfCompetitors))
+        {
+            throw new InvalidOperationException($"Não é possível adicionar mais de {maxCompetitorsAllowed} competidores.");
+        }
 
+        competitors.AddRange(listOfCompetitors);
+    }
 
     public bool IsAvailableToAddCompetitor() => Competitors.Count < maxCompetitorsAllowed;
+    public bool IsAvailableToAddCompetitor(IEnumerable<Competitor> competitors) => competitors.Count() <= maxCompetitorsAllowed;
 }
