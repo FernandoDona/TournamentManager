@@ -22,14 +22,16 @@ public class SingleEliminationStageTests
         var matches = stage.GetMatchesByRound(1);
 
         var highestSeed = 1;
-        var middleSeed = numberOfCompetitors / 2;
         var highestSeedOpponent = numberOfCompetitors;
+        var highestSeedMatchNumber = 1;
+        var middleSeed = numberOfCompetitors / 2;
         var middleSeedOpponent = middleSeed + 1;
 
         var highestSeedMatch = matches.Where(m => m.Competitors.FirstOrDefault(c => c.Seed == highestSeed)?.Seed == highestSeed).Single();
         var middleSeedMatch = matches.Where(m => m.Competitors.FirstOrDefault(c => c.Seed == middleSeed)?.Seed == middleSeed).Single();
         
         Assert.Equal(highestSeedOpponent, highestSeedMatch.Competitors.Max(c => c.Seed));
+        Assert.Equal(highestSeedMatchNumber, highestSeedMatch.MatchNumber);
         Assert.Equal(middleSeedOpponent, middleSeedMatch.Competitors.Max(c => c.Seed));
     }
 
