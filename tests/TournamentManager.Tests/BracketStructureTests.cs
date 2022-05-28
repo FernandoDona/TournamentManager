@@ -23,4 +23,36 @@ public class BracketStructureTests
 
         Assert.Equal(expectedNumberOfNodes, nodes.Count);
     }
+
+    [Fact]
+    public void ShouldReturnAllRoundsOfTheStructure()
+    {
+        var numberOfRounds = 5;
+        var structure = new BracketStructure(numberOfRounds);
+        
+        var rounds = structure.GetRounds();
+
+        Assert.Equal(numberOfRounds, rounds.Count);
+    }
+
+    [Fact]
+    public void ShouldSetNextMatchesCompetitorsFromPreviousRoundResult()
+    {
+        var competitors = HelperTests.GetListOfCompetitors(4);
+        var stage = new SingleEliminationStage();
+        stage.CreateStructure(competitors);
+        var round = stage.GetCurrentRound();
+        foreach (var match in round?.Matches)
+        {
+            match.Winner = match.Competitors.First();
+        }
+
+        var winners = round.Matches.Select(match => match.Winner);
+        
+        var currentRound = stage.GetCurrentRound();
+        stage.SetNextRoundMatches(currentRound);
+
+        var curentCompetitors = currentRound.Matches.SelectMany(match => match.Competitors);
+        Assert.True(winners.SequenceEqual(curentCompetitors));
+    }
 }

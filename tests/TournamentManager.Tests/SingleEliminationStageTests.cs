@@ -14,7 +14,7 @@ public class SingleEliminationStageTests
     [InlineData(32)]
     public void MatchCompetitorsShouldBeOrganizedBySeed(int numberOfCompetitors)
     {
-        var listOfCompetitors = GetListOfCompetitors(numberOfCompetitors);
+        var listOfCompetitors = HelperTests.GetListOfCompetitors(numberOfCompetitors);
 
         var stage = new SingleEliminationStage();
 
@@ -41,7 +41,7 @@ public class SingleEliminationStageTests
     [InlineData(16)]
     public void IfNumberOfCompetitorsIsPowerOf2ShouldDistributeThemInMatches(int numberOfCompetitors)
     {
-        var listOfCompetitors = GetListOfCompetitors(numberOfCompetitors);
+        var listOfCompetitors = HelperTests.GetListOfCompetitors(numberOfCompetitors);
         var stage = new SingleEliminationStage();
         stage.CreateStructure(listOfCompetitors);
         
@@ -56,23 +56,12 @@ public class SingleEliminationStageTests
     [InlineData(16)]
     public void GivenANumberOfCompetitorsShouldCreateDefinedNumberOfRounds(int numberOfCompetitors)
     {
-        var competitors = GetListOfCompetitors(numberOfCompetitors);
-        var quantityOfRounds = Math.Log2(competitors.Count);
+        var competitors = HelperTests.GetListOfCompetitors(numberOfCompetitors);
+        var expectedQuantityOfRounds = Math.Log2(competitors.Count);
         var stage = new SingleEliminationStage();
         stage.CreateStructure(competitors);
 
-        var quantityOfLevels = stage.BracketStructure.CountLevels;
-        Assert.Equal(quantityOfRounds, quantityOfLevels);
-    }
-
-    private List<Competitor> GetListOfCompetitors(int numberOfCompetitors)
-    {
-        var listOfCompetitors = new List<Competitor>();
-        for (int i = 1; i <= numberOfCompetitors; i++)
-        {
-            listOfCompetitors.Add(new Competitor($"Competitor-{i}", i));
-        }
-
-        return listOfCompetitors;
+        var quantityOfRounds = stage.GetRounds().Count;
+        Assert.Equal(expectedQuantityOfRounds, quantityOfRounds);
     }
 }

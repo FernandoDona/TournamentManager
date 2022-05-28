@@ -12,8 +12,8 @@ public class Match
     private List<Competitor> competitors;
 
     public IReadOnlyCollection<Competitor> Competitors { get => new ReadOnlyCollection<Competitor>(competitors); }
-    public Competitor Winner { get; set; }
-    public Competitor Loser { get; set; }
+    public Competitor? Winner { get; set; }
+    public Competitor? Loser { get; set; }
     public int MatchNumber { get; set; }
     public int RoundNumber { get; set; }
 
@@ -26,21 +26,6 @@ public class Match
     {
         competitors = new List<Competitor>();
         AddCompetitor(listOfCompetitors);
-    }
-
-    public void SetWinner(Competitor winner)
-    {
-        if (competitors.Count == 0)
-        {
-            throw new InvalidOperationException("Não é possível terminar uma partida sem competidores.");
-        }
-        if (!competitors.Contains(winner))
-        {
-            throw new InvalidOperationException($"Este competidor não está participando da partida.");
-        }
-
-        Winner = winner;
-        Loser = competitors.FirstOrDefault(c => c != winner);
     }
 
     public void AddCompetitor(Competitor competitor)
@@ -61,6 +46,21 @@ public class Match
         }
 
         competitors.AddRange(listOfCompetitors);
+    }
+
+    public void SetWinner(Competitor winner)
+    {
+        if (competitors.Count == 0)
+        {
+            throw new InvalidOperationException("Não é possível terminar uma partida sem competidores.");
+        }
+        if (!competitors.Contains(winner))
+        {
+            throw new InvalidOperationException($"Este competidor não está participando da partida.");
+        }
+
+        Winner = winner;
+        Loser = competitors.FirstOrDefault(c => c != winner);
     }
 
     public bool IsAvailableToAddCompetitor() => Competitors.Count < maxCompetitorsAllowed;

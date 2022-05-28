@@ -7,5 +7,8 @@ using System.Threading.Tasks;
 namespace TournamentManager;
 public interface IStage
 {
-    public List<Competitor> Competitors { get; }
+    public List<Round> GetRounds();
+    public Round GetRound(int targetRound);
+    public Round? GetCurrentRound();
+    public void SetNextRoundMatches(Round? currentRound);
 }

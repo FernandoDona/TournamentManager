@@ -7,45 +7,36 @@ using System.Threading.Tasks;
 namespace TournamentManager;
 public class SingleEliminationStage : IStage
 {
-    public List<Competitor> Competitors { get; } = new();
-    public BracketStructure BracketStructure { get; private set; }
-    public List<Round> Rounds { get; set; } = new();
+    private BracketStructure _bracketStructure;
 
     public void CreateStructure(List<Competitor> competitors)
     {
         var numberOfRounds = (int)Math.Log2(competitors.Count);
-        BracketStructure = new BracketStructure(numberOfRounds);
+        _bracketStructure = new BracketStructure(numberOfRounds);
         
         var organizedCompetitors = SortCompetitors(competitors);
-        PlaceCompetitorsInInitialMatches(BracketStructure, organizedCompetitors);
+        _bracketStructure.PlaceCompetitorsInInitialMatches(organizedCompetitors);
+    }
+
+    public List<Round> GetRounds()
+    {
+        return _bracketStructure.GetRounds();
+    }
+
+    public Round GetRound(int targetRound)
+    {
+        return _bracketStructure.GetRound(targetRound);
+    }
+    public Round? GetCurrentRound()
+    {
+        return _bracketStructure.GetCurrentRound();
     }
 
     public List<Match> GetMatchesByRound(int targetRound)
     {
-        return BracketStructure.GetNodesOnRound(targetRound)
+        return _bracketStructure.GetNodesOnRound(targetRound)
             .Select(node => node.Match)
             .ToList();
-    }
-
-    private void PlaceCompetitorsInInitialMatches(BracketStructure bracketStructure, List<Competitor> competitors)
-    {
-        PopulateLeafNodes(new Queue<Competitor>(competitors), BracketStructure.RootNode);
-    }
-
-    private void PopulateLeafNodes(Queue<Competitor> competitors, BracketNode node)
-    {
-        if (node.IsLeafNode())
-        {
-            while (node.Match.IsAvailableToAddCompetitor())
-            {
-                node.Match.AddCompetitor(competitors.Dequeue());
-            }
-            
-            return;
-        }
-
-        PopulateLeafNodes(competitors, node.Right);
-        PopulateLeafNodes(competitors, node.Left);
     }
 
     private List<Competitor> SortCompetitors(List<Competitor> competitors)
@@ -77,5 +68,10 @@ public class SingleEliminationStage : IStage
         }
 
         return sortedCompetitors;
+    }
+
+    public void SetNextRoundMatches(Round? currentRound)
+    {
+        _bracketStructure.SetNextRoundMatches(currentRound);
     }
 }
