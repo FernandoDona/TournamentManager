@@ -44,7 +44,7 @@ public class BracketStructureTests
         var round = stage.GetCurrentRound();
         foreach (var match in round?.Matches)
         {
-            match.Winner = match.Competitors.First();
+            match.SetWinner(match.Competitors.First());
         }
 
         var winners = round.Matches.Select(match => match.Winner);

@@ -12,8 +12,8 @@ public class Match
     private List<Competitor> competitors;
 
     public IReadOnlyCollection<Competitor> Competitors { get => new ReadOnlyCollection<Competitor>(competitors); }
-    public Competitor? Winner { get; set; }
-    public Competitor? Loser { get; set; }
+    public Competitor? Winner { get; private set; }
+    public Competitor? Loser { get; private set; }
     public int MatchNumber { get; set; }
     public int RoundNumber { get; set; }
 
