@@ -60,7 +60,7 @@ public class BracketStructure
         return nodes;
     }
 
-    public void SetNextRoundMatches(Round? currentRound)
+    public void SetRoundMatchesFromPreviousResults(Round? currentRound)
     {
         if (currentRound is null) return;
 
@@ -112,10 +112,11 @@ public class BracketStructure
             levelNodes.Add(node);
         }
     }
+  
     /// <summary>
-    /// Obtem o round em andamento, ou seja, que não foi finalizado.
+    /// Obtem o round em andamento, ou seja, o primeiro que não foi finalizado.
     /// </summary>
-    /// <returns>Retorna o round em andamento ou null se não existirem rounds em andamento.</returns>
+    /// <returns>Retorna o round em andamento ou null se todos orunds foram finalizados.</returns>
     /// <exception cref="InvalidOperationException"></exception>
     public Round? GetCurrentRound()
     {
@@ -139,6 +140,30 @@ public class BracketStructure
         }
         
         return round.IsFinished ? null : round;
+    }
+
+    /// <summary>
+    /// Obtem o último round finalizado.
+    /// </summary>
+    /// <returns>Retorna o último round finalizado ou null se não houver rounds finalizados.</returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    public Round? GetLastFinishedRound()
+    {
+        if (CountLevels < 1)
+        {
+            throw new InvalidOperationException("Não existem rounds na estrutura.");
+        }
+
+        Round round = null;
+
+        for (int i = CountLevels; i > 0; i--)
+        {
+            round = GetRound(i);
+
+            if (round.IsFinished) break;
+        }
+
+        return round.IsFinished ? round : null;
     }
 
     public void PlaceCompetitorsInInitialMatches(List<Competitor> competitors)

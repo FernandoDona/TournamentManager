@@ -10,5 +10,6 @@ public interface IStage
     public List<Round> GetRounds();
     public Round GetRound(int targetRound);
     public Round? GetCurrentRound();
-    public void SetNextRoundMatches(Round? currentRound);
+    public Round? GetLastFinishedRound();
+    public void SetRoundMatchesFromPreviousResults(Round? currentRound);
 }

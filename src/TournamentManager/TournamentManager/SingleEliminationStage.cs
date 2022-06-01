@@ -31,6 +31,10 @@ public class SingleEliminationStage : IStage
     {
         return _bracketStructure.GetCurrentRound();
     }
+    public Round? GetLastFinishedRound()
+    {
+        return _bracketStructure.GetLastFinishedRound();
+    }
 
     public List<Match> GetMatchesByRound(int targetRound)
     {
@@ -70,8 +74,9 @@ public class SingleEliminationStage : IStage
         return sortedCompetitors;
     }
 
-    public void SetNextRoundMatches(Round? currentRound)
+    public void SetRoundMatchesFromPreviousResults(Round? currentRound)
     {
-        _bracketStructure.SetNextRoundMatches(currentRound);
+        _bracketStructure.SetRoundMatchesFromPreviousResults(currentRound);
     }
+
 }

@@ -35,10 +35,12 @@ public class BracketStructureTests
         Assert.Equal(numberOfRounds, rounds.Count);
     }
 
-    [Fact]
-    public void ShouldSetNextMatchesCompetitorsFromPreviousRoundResult()
+    [Theory]
+    [InlineData(4)]
+    [InlineData(16)]
+    public void ShouldSetRoundMatchesFromPreviousResults(int numberOfCompetitors)
     {
-        var competitors = HelperTests.GetListOfCompetitors(4);
+        var competitors = HelperTests.GetListOfCompetitors(numberOfCompetitors);
         var stage = new SingleEliminationStage();
         stage.CreateStructure(competitors);
         var round = stage.GetCurrentRound();
@@ -50,9 +52,47 @@ public class BracketStructureTests
         var winners = round.Matches.Select(match => match.Winner);
         
         var currentRound = stage.GetCurrentRound();
-        stage.SetNextRoundMatches(currentRound);
+        stage.SetRoundMatchesFromPreviousResults(currentRound);
 
         var curentCompetitors = currentRound.Matches.SelectMany(match => match.Competitors);
         Assert.True(winners.SequenceEqual(curentCompetitors));
+    }
+
+    [Theory]
+    [InlineData(4)]
+    [InlineData(16)]
+    public void ShouldGetTheLastFinishedRound(int numberOfCompetitors)
+    {
+        var competitors = HelperTests.GetListOfCompetitors(numberOfCompetitors);
+        var stage = new SingleEliminationStage();
+        stage.CreateStructure(competitors);
+        
+        var finishedRound = stage.GetCurrentRound();
+        stage.SetRoundMatchesFromPreviousResults(finishedRound);
+        foreach (var match in finishedRound?.Matches)
+        {
+            match.SetWinner(match.Competitors.First());
+        }
+
+        finishedRound = stage.GetCurrentRound();
+        stage.SetRoundMatchesFromPreviousResults(finishedRound);
+        foreach (var match in finishedRound?.Matches)
+        {
+            match.SetWinner(match.Competitors.First());
+        }
+
+        var roundToVerify = stage.GetLastFinishedRound();
+
+        Assert.Equal(finishedRound.Number, roundToVerify.Number);
+    }
+
+    private void FinishRound(SingleEliminationStage stage)
+    {
+        var currentRound = stage.GetCurrentRound();
+        stage.SetRoundMatchesFromPreviousResults(currentRound);
+        foreach (var match in currentRound?.Matches)
+        {
+            match.SetWinner(match.Competitors.First());
+        }
     }
 }
